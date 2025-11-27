@@ -1,27 +1,30 @@
 // this file will tell what will be the structure of our data
 
-import { gql } from "graphql-tag";
-
-const typeDefs = gql`
+export const typeDefs = `#graphql
   type SendResponse {
     status: String!
     traceId: ID!
     messageId: ID!
   }
 
+  enum ChannelType{
+    email
+    sms
+    whatsapp
+  }
+
   input SendMessageInput {
-    channel: String! # email | sms | whatsapp
+    channel: ChannelType!
     to: String!
     body: String!
   }
 
+  
   type Query {
-    health: String!
+    portStatus: String!
   }
 
   type Mutation {
     sendMessage(input: SendMessageInput!): SendResponse!
   }
 `;
-
-module.exports = typeDefs;
