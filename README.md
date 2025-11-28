@@ -40,7 +40,7 @@ docker compose up -d
 
 This brings up RabbitMQ (ports `5672/15672`), Elasticsearch (`9200/9300`), and all three Node.js services. LowDB volumes are mounted so data survives container restarts.
 
-> **Elastic credentials**: populate `logging-service/.env` (see `ELASTIC_URL`, `ELASTIC_USER`, `ELASTIC_PASSWORD`). For local testing you can use the default `elastic` user created by the official image.
+> **Elastic credentials**: creat `.env` in all services and populate those with correct variables (see Step-2 to configure env variables). For local testing we can use the default `elastic` user created by the official image.
 
 ### 2. Run services individually or local/host system
 
@@ -52,8 +52,9 @@ Each service uses `npm` scripts; run them in separate terminals after exporting 
 # Task Router (GraphQL on :4000)
 cd task-router
 npm install
-RABBITMQ_URL=amqp://localhost PORT=4000 DB_DIR=../db/data npm run start
-
+RABBITMQ_URL=amqp://localhost:5672 PORT=4000 DB_DIR=../db/data npm run start
+# For docker to run with correct variable replace localhost to container name(you can check conatiner name in docker-compose.yml file) lie below:
+# RABBITMQ_URL=amqp://rabbitmq:5672
 # Delivery Service workers
 cd delivery-service
 npm install
