@@ -14,7 +14,24 @@ This repository contains the implementation for a three-service communication ag
 - **Logging Service (`logging-service`)** consumes the `logs` queue, send them into Elasticsearch (`communication_logs` index).
 - **Shared Infrastructure** includes RabbitMQ, Elasticsearch (observability), and file-based LowDB instances that make the state visible without installing a heavyweight RDBMS.
 
-[![](https://mermaid.ink/img/pako:eNqNU2Fv2jAQ_SuWP4EGaQmBQFQhdQ3iw0BrCVKrBYRMcku8JnZmO10Z6X-fTZqKdUJd8sX2vffu7vl8wBGPAXs4EaRI0cpfM6S_m4wCU2E4M6d389f9xS2XKidss0Hd7qRalIooyhmSwOIFSEkSqNBq2VoR-YiWvFQg2rXeamkYqCrKXUZliqKUMAaZdaX2BUwqNH0IW0uy21G1uEN5LbWFZwNLoL2pRaYPtUhDhpzQrELBcjs1q9CHjD6B2KMAxBONAF3txAQdUehnCSV8qBMsgjMqMpf_qXEfXJ_R-JUSJUlR_CXUOJPxRFZo_nUWnDhhDmt040HT7HvSW1SnPxvT7Z2NnagGigtAcdNDTBSp0CKY-Z_D1uvddOOd9UNydlLWW-Lz9H8L-QjbuOODgihFfllkNCIK0CdkqKaSWxCSSqUH7zr4YkpUevq64jh978s0HR8F50E450lCWdJcUYOo41N9C9OMSEUjCUTo1BHP85KZ5Hrit8bA9gZ39LOhMfaUKKGDcxDaRL3FByO2xiqFHNbY08uYiMc1XrMXzSkI-8Z53tB0qUnabMpCewA-Jfo9asR3kkkD0Q8MxA0vmcKePbbdowj2DvgZe91-z7UG9mA01L_rXvaG_Q7e63PHHlruYNwfO-PByB31Bi8d_PuY2Lb6Ts927JEzvLRtp69DfwBr6kzs?type=png)](https://mermaid.live/edit#pako:eNqNU2Fv2jAQ_SuWP4EGaQmBQFQhdQ3iw0BrCVKrBYRMcku8JnZmO10Z6X-fTZqKdUJd8sX2vffu7vl8wBGPAXs4EaRI0cpfM6S_m4wCU2E4M6d389f9xS2XKidss0Hd7qRalIooyhmSwOIFSEkSqNBq2VoR-YiWvFQg2rXeamkYqCrKXUZliqKUMAaZdaX2BUwqNH0IW0uy21G1uEN5LbWFZwNLoL2pRaYPtUhDhpzQrELBcjs1q9CHjD6B2KMAxBONAF3txAQdUehnCSV8qBMsgjMqMpf_qXEfXJ_R-JUSJUlR_CXUOJPxRFZo_nUWnDhhDmt040HT7HvSW1SnPxvT7Z2NnagGigtAcdNDTBSp0CKY-Z_D1uvddOOd9UNydlLWW-Lz9H8L-QjbuOODgihFfllkNCIK0CdkqKaSWxCSSqUH7zr4YkpUevq64jh978s0HR8F50E450lCWdJcUYOo41N9C9OMSEUjCUTo1BHP85KZ5Hrit8bA9gZ39LOhMfaUKKGDcxDaRL3FByO2xiqFHNbY08uYiMc1XrMXzSkI-8Z53tB0qUnabMpCewA-Jfo9asR3kkkD0Q8MxA0vmcKePbbdowj2DvgZe91-z7UG9mA01L_rXvaG_Q7e63PHHlruYNwfO-PByB31Bi8d_PuY2Lb6Ts927JEzvLRtp69DfwBr6kzs)
+```mermaid
+flowchart TD
+    Client[[GraphQL Client/Postman]] -->|Mutation sendMessage| TR(Task Router)
+    TR --> |publish channel.<type>| EX[(RabbitMQ message_exchange)]
+    EX --> |channel.email| SR_Email[Delivery Service <br> email queue]
+    EX --> |channel.email| SR_SMS[Delivery Service <br> sms queue]
+    EX --> |channel.email| SR_WSA[Delivery Service <br> whatsapp queue]
+    TR --> |logs| LOGS[(RabbitMQ logs queue)]
+    SR_Email --> |logs| LOGS
+    SR_WSA --> |logs| LOGS
+    SR_SMS --> |logs| LOGS
+    SR_Email --> |Store delivery data| MSGDB[(message-db.json)]
+    SR_WSA --> |Store delivery data| MSGDB
+    SR_SMS --> |Store delivery data| MSGDB
+    TR --> |Detech Duplicate + Storage-Persist| TASKDB[(task-router-db.json)]
+    LOGS --> LS[Logging Service]
+    LS --> ES[(Elasticsearch communication_logs)]
+```
 
 ### Data Flow
 
