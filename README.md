@@ -40,7 +40,7 @@ docker compose up -d
 
 This brings up RabbitMQ (ports `5672/15672`), Elasticsearch (`9200/9300`), and all three Node.js services. LowDB volumes are mounted so data survives container restarts.
 
-> **Elastic credentials**: creat `.env` in all services and populate those with correct variables (see Step-2 to configure env variables). For local testing we can use the default `elastic` user created by the official image.
+> **Elastic credentials**: create `.env` in all services and populate those with correct variables (see Step-2 to configure env variables). For local testing we can use the default `elastic` user created by the official image.
 
 ### 2. Run services individually or local/host system
 
