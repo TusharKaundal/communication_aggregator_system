@@ -15,7 +15,7 @@ This repository contains the implementation for a three-service communication ag
 - **Shared Infrastructure** includes RabbitMQ, Elasticsearch (observability), and file-based LowDB instances that make the state visible without installing a heavyweight RDBMS.
 
 ```mermaid
-graph TD:
+graph TD
   A -> B;
   A -> D;
 ```
