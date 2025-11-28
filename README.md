@@ -12,7 +12,7 @@ This repository contains the implementation for a three-service communication ag
 - **Task Router (`task-router`)** receives GraphQL `sendMessage` mutations, persists deduplicated intents to LowDB (`db/data/task-router-db.json`), and publishes payloads to a RabbitMQ topic exchange (`message_exchange`).
 - **Delivery Service (`delivery-service`)** subscribes to channel-specific queues, calls mocked channel adapters (`services/email|sms|whatsapp.js`), persists deliveries to `db/data/message-db.json`, and emits structured log events.
 - **Logging Service (`logging-service`)** consumes the `logs` queue, send them into Elasticsearch (`communication_logs` index).
-- **Shared Infrastructure** includes RabbitMQ, Elasticsearch (observability), and file-based LowDB instances that make the state visible without installing a heavyweight RDBMS.
+- **Shared Infrastructure** includes RabbitMQ, Elasticsearch (observability), and file-based LowDB instances that make the state persistant.
 
 ```mermaid
 flowchart TD
