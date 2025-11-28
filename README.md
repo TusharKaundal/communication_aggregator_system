@@ -24,7 +24,7 @@ graph TD
   DS_Email -->|Persist delivery| MSGDB[(message-db.json)]
   DS_SMS -->|Persist delivery| MSGDB
   DS_WA -->|Persist delivery| MSGDB
-  TR -->|Dedup + persist| ROUTERDB[(task-router-db.json)]
+  TR -->|Detect Duplicates + persist| ROUTERDB[(task-router-db.json)]
   TR -->|Log| LOGS[(RabbitMQ logs queue)]
   DS_Email -->|Log| LOGS
   DS_SMS -->|Log| LOGS
