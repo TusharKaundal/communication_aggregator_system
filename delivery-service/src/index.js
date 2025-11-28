@@ -23,7 +23,7 @@ const processMessage = async (channel, msg, handler, type) => {
     await saveMessage(data);
     console.log(`✔ ${type} delivered successfully:`, data.id);
 
-    rabbit.channel.sendToQueue(
+    channel.sendToQueue(
       "logs",
       Buffer.from(
         JSON.stringify({
@@ -41,7 +41,7 @@ const processMessage = async (channel, msg, handler, type) => {
   } catch (error) {
     console.log(`❌ ${type} delivery failed — retrying...`, error.message);
 
-    rabbit.channel.sendToQueue(
+    channel.sendToQueue(
       "logs",
       Buffer.from(
         JSON.stringify({

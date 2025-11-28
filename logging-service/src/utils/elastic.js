@@ -8,11 +8,14 @@ export const es = new Client({
     username: process.env.ELASTIC_USER,
     password: process.env.ELASTIC_PASSWORD,
   },
+  tls: {
+    rejectUnauthorized: false,
+  },
 });
 
 export const saveLog = async (log) => {
   await es.index({
-    index: "comms_logs",
+    index: "communication_logs",
     document: log,
   });
 };

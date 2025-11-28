@@ -10,14 +10,29 @@ export const resolvers = {
     sendMessage: async (_, { input }, { rabbit }) => {
       const { channel: type, to, body } = input;
 
-      if (isDuplicate(body)) {
-        throw new Error("Duplicate body detected");
-      }
-
       // ◼ Auto-generate IDs
       const messageId = uuid();
       const traceId = uuid();
 
+      if (isDuplicate({ channel: type, to, body })) {
+        rabbit.channel.sendToQueue(
+          "logs",
+          Buffer.from(
+            JSON.stringify({
+              timestamp: new Date(),
+              traceId,
+              spanId: uuid(),
+              service: "task-router",
+              level: "error",
+              event: "message_routed",
+              message: "Message have duplicate body",
+              meta: { messageId, channel: type, body },
+            })
+          )
+        );
+        console.log("Duplicate body detected");
+        throw new Error("Duplicate body detected");
+      }
       // Save message in DB
       await saveMessage({ id: messageId, channel: type, to, body });
 
@@ -58,6 +73,7 @@ export const resolvers = {
         throw new Error("Failed to publish message after retries.");
       }
 
+      console.log(`📨 Message routered from task-router → ${type}`, messageId);
       // ◼ Logging
       rabbit.channel.sendToQueue(
         "logs",
