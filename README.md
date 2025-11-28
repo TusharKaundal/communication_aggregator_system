@@ -16,8 +16,8 @@ This repository contains the implementation for a three-service communication ag
 
 ```mermaid
 graph TD
-  A -> B
-  A -> D
+  A --> B
+  A --> D
 ```
 
 ### Data Flow
