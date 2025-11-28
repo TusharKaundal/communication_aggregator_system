@@ -1,0 +1,60 @@
+{
+	"info": {
+		"_postman_id": "c71b531e-3688-403d-b82a-cd62d4a0c247",
+		"name": "Communication Aggregator - API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15066984"
+	},
+	"item": [
+		{
+			"name": "sendMessage(Mutation)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation SendMessage($input : SendMessageInput!){\r\n    sendMessage(input:$input){\r\n        traceId,\r\n        messageId\r\n    }\r\n}",
+						"variables": "{\r\n  \"input\": {\r\n        \"channel\": \"email\",\r\n        \"to\": \"karma@example.com\",\r\n        \"body\": \"Welcome to the karma\"\r\n    }\r\n}"
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000"
+				}
+			},
+			"response": [
+				{
+					"name": "sendMessage(Mutation)",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation SendMessage($input : SendMessageInput!){\r\n    sendMessage(input:$input){\r\n        traceId,\r\n        messageId\r\n    }\r\n}",
+								"variables": "{\r\n  \"input\": {\r\n        \"channel\": \"email\",\r\n        \"to\": \"usersss@example.com\",\r\n        \"body\": \"Welcome to the rasper\"\r\n    }\r\n}"
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000"
+						}
+					},
+					"_postman_previewlanguage": "",
+					"header": [],
+					"cookie": [],
+					"body": ""
+				}
+			]
+		}
+	]
+}
