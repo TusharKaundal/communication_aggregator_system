@@ -68,6 +68,7 @@ npm install
 RABBITMQ_URL=amqp://localhost:5672 PORT=4000 DB_DIR=../db/data npm run start
 # For docker to run with correct variable replace localhost to container name(you can check conatiner name in docker-compose.yml file) lie below:
 # RABBITMQ_URL=amqp://rabbitmq:5672
+
 # Delivery Service workers
 cd delivery-service
 npm install
