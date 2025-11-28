@@ -5,7 +5,23 @@ import { isDuplicate, saveMessage } from "./utils/db.js";
 import { emailDelivery } from "./services/email.js";
 import { whatsappDelivery } from "./services/whatsapp.js";
 import { smsDelivery } from "./services/sms.js";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const folderPath = path.resolve(__dirname, "../../db/data");
+
+if (!fs.existsSync(folderPath)) {
+  fs.mkdirSync(folderPath, { recursive: true });
+  console.log("Folder created db/data");
+} else {
+  console.log("Folder exists");
+}
 
 const processMessage = async (channel, msg, handler, type) => {
   const data = JSON.parse(msg.content.toString());

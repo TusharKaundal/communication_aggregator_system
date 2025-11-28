@@ -7,6 +7,22 @@ import { resolvers } from "./graphql/resolvers.js";
 
 dotenv.config();
 
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const folderPath = path.resolve(__dirname, "../../db/data");
+
+if (!fs.existsSync(folderPath)) {
+  fs.mkdirSync(folderPath, { recursive: true });
+  console.log("Folder created db/data");
+} else {
+  console.log("Folder exists");
+}
+
 async function startServer() {
   const rabbit = await createRabbitMQ();
 

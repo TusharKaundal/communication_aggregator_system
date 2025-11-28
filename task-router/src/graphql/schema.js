@@ -2,7 +2,6 @@
 
 export const typeDefs = `#graphql
   type SendResponse {
-    status: String!
     traceId: ID!
     messageId: ID!
   }

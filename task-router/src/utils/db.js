@@ -11,7 +11,6 @@ const db = await JSONFilePreset(
 );
 
 export function isDuplicate({ channel, to, body }) {
-  console.log(db.data.message);
   return db.data?.message.some(
     (msg) => msg.body === body && msg.to === to && msg.channel === channel
   );

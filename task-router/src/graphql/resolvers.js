@@ -92,7 +92,6 @@ export const resolvers = {
       );
 
       return {
-        status: "queued",
         traceId,
         messageId,
       };
