@@ -16,8 +16,21 @@ This repository contains the implementation for a three-service communication ag
 
 ```mermaid
 graph TD
-  A --> B
-  A --> D
+  Client[[GraphQL Client / Postman]] -->|Mutation sendMessage| TR(Task Router)
+  TR -->|Topic publish channel.*| EX[(RabbitMQ message_exchange)]
+  EX -->|channel.email| DS_Email[Delivery Service<br>email_queue]
+  EX -->|channel.sms| DS_SMS[Delivery Service<br>sms_queue]
+  EX -->|channel.whatsapp| DS_WA[Delivery Service<br>whatsapp_queue]
+  DS_Email -->|Persist delivery| MSGDB[(message-db.json)]
+  DS_SMS -->|Persist delivery| MSGDB
+  DS_WA -->|Persist delivery| MSGDB
+  TR -->|Dedup + persist| ROUTERDB[(task-router-db.json)]
+  TR -->|Log| LOGS[(RabbitMQ logs queue)]
+  DS_Email -->|Log| LOGS
+  DS_SMS -->|Log| LOGS
+  DS_WA -->|Log| LOGS
+  LOGS --> LS[Logging Service]
+  LS --> ES[(Elasticsearch communication_logs)]
 ```
 
 ### Data Flow
