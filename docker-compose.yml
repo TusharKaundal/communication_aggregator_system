@@ -1,0 +1,70 @@
+services:
+  rabbitmq:
+    image: rabbitmq:4-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q","ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.2.1
+    container_name: elasticsearch
+    env_file:
+      - ./logging-service/.env
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=false
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    restart: unless-stopped
+  delivery-service:
+    build: ./delivery-service
+    container_name: delivery-service
+    depends_on:
+      - rabbitmq
+    environment:
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+      - DB_DIR=/app/db/data
+    volumes:
+      - server_data:/app/db/data
+    restart: unless-stopped
+  logging-service:
+    build: ./logging-service
+    container_name: logging-service
+    depends_on:
+      - rabbitmq
+      - elasticsearch
+    environment:
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+      - ELASTIC_URL=http://elasticsearch:9200
+    restart: unless-stopped
+  task-router:
+    build: ./task-router
+    container_name: task-router
+    ports:
+      - "4000:4000"
+    depends_on:
+      - rabbitmq
+    environment:
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+      - PORT=4000
+      - DB_DIR=/app/db/data
+    volumes:
+      - server_data:/app/db/data
+    restart: unless-stopped
+
+volumes:
+  esdata:
+  rabbitmq_data:
+  server_data:
