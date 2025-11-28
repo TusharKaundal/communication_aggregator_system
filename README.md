@@ -1,6 +1,9 @@
 # Communication Aggregator System
 
-This repository contains the reference implementation for a three-service communication aggregator: a **Task Router** GraphQL API, a **Delivery Service** that fans out work across channels, and a **Logging Service** that centralizes observability in Elasticsearch. All three services are orchestrated locally through Docker Compose and communicate asynchronously through RabbitMQ.
+This repository contains the implementation for a three-service communication aggregator:
+ - **Task Router** GraphQL API routing
+ - **Delivery Service** that fans out work across channels
+ - **Logging Service** that centralizes observability in Elasticsearch.
 
 ---
 
@@ -10,6 +13,12 @@ This repository contains the reference implementation for a three-service commun
 - **Delivery Service (`delivery-service`)** subscribes to channel-specific queues, calls mocked channel adapters (`services/email|sms|whatsapp.js`), persists deliveries to `db/data/message-db.json`, and emits structured log events.
 - **Logging Service (`logging-service`)** consumes the `logs` queue, send them into Elasticsearch (`communication_logs` index).
 - **Shared Infrastructure** includes RabbitMQ, Elasticsearch (observability), and file-based LowDB instances that make the state visible without installing a heavyweight RDBMS.
+
+```mermaid
+graph TD:
+  A -> B
+  A -> D
+```
 
 ### Data Flow
 
